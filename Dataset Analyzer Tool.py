@@ -32,8 +32,8 @@ class DatasetManager:
 
 
 
-    def is_loding(self):
-        return self.df is None
+    def is_loaded(self):
+        return self.df is not None
 
 
 
@@ -65,9 +65,9 @@ class DatasetAnalyzerApp:
             elif choice == '1':
                 self.data_exploration_menu()
             elif choice == '2':
-                print("⚠️ Work in under dovelopement")
+                self.data_cleaning_menu()
             elif choice == '3':
-                print("⚠️ Work in under dovelopement")
+                self.data_visualization_menu()
             elif choice == '4':
                 print("\n\nSee you again!!")
                 print("______________________________")
@@ -78,7 +78,7 @@ class DatasetAnalyzerApp:
     ## Data Exploration Menu with choice handelling
     def data_exploration_menu(self):
 
-        if self.manager.is_loding():
+        if not self.manager.is_loaded():
             print("\n❌ Please load dataset first.")
             return
 
@@ -96,8 +96,7 @@ class DatasetAnalyzerApp:
             print("7. Statistical Summary")
             print("8. Missing Value Report")
             print("9. Unique Values in Column")
-            print("10. Value Counts in Column")
-            print("11. Back")
+            print("10. Back")
             print("==============================")
 
             choice = input("Enter your choice: ").strip()
@@ -136,19 +135,50 @@ class DatasetAnalyzerApp:
                 print("------[Missing Value Report]-----")
                 print(self.manager.df.isnull().sum())
                 print("--------------[In %]-------------")
-                print((self.manager.df.isnull().sum() / len(self.manager.df))*100)
+                print(round((self.manager.df.isnull().sum() / len(self.manager.df))*100, 1))
 
             elif choice == '9':
-                pass
+                col_name = input("Enter column name: ").strip()
+                if col_name in self.manager.df.columns:
+                    print(f"----[Unique Values in {col_name.title()}]----")
+                    for val in self.manager.df[col_name].unique():
+                        print(f"- {val}")
 
-            elif choice == '11':
-                pass
+                else:
+                    print("\n❌ Column not found. Try again..")
+                    print("Note-> column name should same as original column name case(upper/lower).\n")
 
+
+            elif choice == '10':
+                print(".....Back to Main Menu.....\n")
+                return
+            
             else:
                 print("❌ Invalid choice. Try again.\n")
             
             print("----------------------------------")
         
+
+
+    ## Data cleaning menu with choice handeling
+    def data_cleaning_menu(self):
+        if not self.manager.is_loaded():
+            print("\n❌ Please load dataset first.")
+            return
+        
+        print("⚠️ Work in under dovelopement")
+        print("This option will coming soon!")
+
+    ## Data visualization menu with choice handeling
+    def data_visualization_menu(self):
+        if not self.manager.is_loaded():
+            print("\n❌ Please load dataset first.")
+            return
+        
+        print("⚠️ Work in under dovelopement")
+        print("This option will coming soon!")
+        
+
 
 
 
