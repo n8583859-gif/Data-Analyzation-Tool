@@ -113,9 +113,8 @@ class DatasetAnalyzerApp:
                     print(col)
 
             elif choice == '3':
-                data_types = self.manager.df.dtypes
                 print("-----------[Data Types]----------")
-                print(data_types)
+                print(self.manager.df.dtypes)
 
             elif choice == '4':
                 print("-----------[Dataset Info]---------")
@@ -130,13 +129,16 @@ class DatasetAnalyzerApp:
                 print(self.manager.df.tail())
             
             elif choice == '7':
-                pass
+                print("--------[Statical Summary]-------")
+                print(self.manager.df.describe())
+
+            elif choice == '8':
+                print("------[Missing Value Report]-----")
+                print(self.manager.df.isnull().sum())
+                print("--------------[In %]-------------")
+                print((self.manager.df.isnull().sum() / len(self.manager.df))*100)
 
             elif choice == '9':
-
-                pass
-            elif choice == '10':
-
                 pass
 
             elif choice == '11':
