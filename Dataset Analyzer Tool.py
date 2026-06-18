@@ -33,7 +33,7 @@ class DatasetManager:
 
 
     def is_loding(self):
-        return self.df is not None
+        return self.df is None
 
 
 
@@ -44,6 +44,7 @@ class DatasetAnalyzerApp:
     def __init__(self):
         self.manager = DatasetManager()
 
+    ## Main menu with choice handelling
     def menu_system(self):
         while True:
             print("\n==============================")
@@ -62,7 +63,7 @@ class DatasetAnalyzerApp:
                 path = input("Enter CSV file path: ").strip()
                 self.manager.load_dataset(path)
             elif choice == '1':
-                print("⚠️ Work in under dovelopement")
+                self.data_exploration_menu()
             elif choice == '2':
                 print("⚠️ Work in under dovelopement")
             elif choice == '3':
@@ -74,7 +75,78 @@ class DatasetAnalyzerApp:
             else:
                 print("❌ Invalid choice. Try again.\n")
 
+    ## Data Exploration Menu with choice handelling
+    def data_exploration_menu(self):
 
+        if self.manager.is_loding():
+            print("\n❌ Please load dataset first.")
+            return
+
+
+        while True:
+            print("\n==============================")
+            print("   DATA EXPLORATION MENU ")
+            print("==============================")
+            print("1. Dataset Shape")
+            print("2. Column Names")
+            print("3. Data Types")
+            print("4. Dataset Info")
+            print("5. First 5 Rows")
+            print("6. Last 5 Rows")
+            print("7. Statistical Summary")
+            print("8. Missing Value Report")
+            print("9. Unique Values in Column")
+            print("10. Value Counts in Column")
+            print("11. Back")
+            print("==============================")
+
+            choice = input("Enter your choice: ").strip()
+
+            if choice == '1':
+                print("--------------[Shape]-------------")
+                print(f"\nRows: {self.manager.df.shape[0]}")
+                print(f"Columns: {self.manager.df.shape[1]}\n")
+            
+            elif choice == '2':
+                print("-----------[Column Names]---------")
+                for col in self.manager.df.columns:
+                    print(col)
+
+            elif choice == '3':
+                data_types = self.manager.df.dtypes
+                print("-----------[Data Types]----------")
+                print(data_types)
+
+            elif choice == '4':
+                print("-----------[Dataset Info]---------")
+                self.manager.df.info()
+
+            elif choice == '5': 
+                print("---------[First 5 Rows]-----------")
+                print(self.manager.df.head())
+            
+            elif choice == '6':
+                print("---------[Last 5 Rows]-----------")
+                print(self.manager.df.tail())
+            
+            elif choice == '7':
+                pass
+
+            elif choice == '9':
+
+                pass
+            elif choice == '10':
+
+                pass
+
+            elif choice == '11':
+                pass
+
+            else:
+                print("❌ Invalid choice. Try again.\n")
+            
+            print("----------------------------------")
+        
 
 
 
@@ -82,7 +154,5 @@ class DatasetAnalyzerApp:
 if __name__ == "__main__":
     app = DatasetAnalyzerApp()
     app.menu_system()
-
-
 
 
