@@ -16,7 +16,7 @@ class DatasetManager:
 
     def load_dataset(self):
         while True:
-            path = input("Enter CSV file path: ").strip()
+            path = input("Enter CSV file path (or `q` to quit): ").strip()
             if path.lower().endswith('.csv'):
                 try:
                     self.df = pd.read_csv(path)
@@ -30,6 +30,8 @@ class DatasetManager:
 
                 except FileNotFoundError:
                     print("❌ File not found")
+            elif path.lower() == 'q':
+                return
             else:
                 print("❌ Please provide a CSV file\n")
 
