@@ -151,7 +151,34 @@ class DataCleaner:
 
 
     def drop_missing_rows(self):
-        pass
+        df = self.manager.df
+        before_rows = df.shape[0]
+        after_rows = df.dropna().shape[0]
+        removed_rows = before_rows - after_rows
+        removed_rows_percentage = round((removed_rows/before_rows)*100, 2)
+
+        print("\n---------[Quick View of Missing Rows]-------")
+        print(f"Rows Before: {before_rows}")
+        print(f"Rows To Remove: {removed_rows}")
+        print(f"% of Rows For Remove: {removed_rows_percentage}")
+        print(f"Rows After: {after_rows}")
+        
+        print("----------------------------------------------")
+
+        while True:
+            choice = input("⚠️ Are you sure! you wanna proceed (y/n): ").strip()
+            if choice.lower() == 'y':
+                df.dropna(inplace=True)
+                print(f"/n☑️ {removed_rows} rows removed/dropped successfully.\n")
+                return 
+            elif choice.lower() == 'n':
+                return
+            else:
+                print("❌ Invalid choice. Try again.\n")
+
+
+
+
 
     def drop_missing_columns(self):
         pass
