@@ -155,7 +155,7 @@ class DataCleaner:
         before_rows = df.shape[0]
         after_rows = df.dropna().shape[0]
         removed_rows = before_rows - after_rows
-        removed_rows_percentage = round((removed_rows/before_rows)*100, 2)
+        removed_rows_percentage = round((removed_rows/before_rows)*100, 2) if before_rows else 0
 
         print("\n---------[Quick View of Missing Rows]-------")
         print(f"Rows Before: {before_rows}")
