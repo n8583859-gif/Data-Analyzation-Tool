@@ -14,21 +14,25 @@ class DatasetManager:
 
 
 
-    def load_dataset(self, path):
-        if path.lower().endswith('.csv'):
-            try:
-                self.df = pd.read_csv(path)
-                self.file_path = path
+    def load_dataset(self):
+        while True:
+            path = input("Enter CSV file path: ").strip()
+            if path.lower().endswith('.csv'):
+                try:
+                    self.df = pd.read_csv(path)
+                    self.file_path = path
 
-                file_name = os.path.basename(path)
-                print(f"\n☑️ Dataset {file_name} loaded successfully")
-                print(f"Rows: {self.df.shape[0]}")
-                print(f"Columns: {self.df.shape[1]}")
+                    file_name = os.path.basename(path)
+                    print(f"\n☑️ Dataset {file_name} loaded successfully")
+                    print(f"Rows: {self.df.shape[0]}")
+                    print(f"Columns: {self.df.shape[1]}")
+                    return
 
-            except FileNotFoundError:
-                print("❌ File not found")
-        else:
-            print("❌ Please provide a CSV file\n")
+                except FileNotFoundError:
+                    print("❌ File not found")
+            else:
+                print("❌ Please provide a CSV file\n")
+
 
 
 
@@ -60,8 +64,7 @@ class DatasetAnalyzerApp:
             choice = input("Enter your choice: ").strip()
 
             if choice == '0':
-                path = input("Enter CSV file path: ").strip()
-                self.manager.load_dataset(path)
+                self.manager.load_dataset()
             elif choice == '1':
                 self.data_exploration_menu()
             elif choice == '2':
