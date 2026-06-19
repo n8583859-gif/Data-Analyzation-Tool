@@ -20,7 +20,7 @@ class DatasetManager:
             path = input("Enter CSV file path (or `q` to quit): ").strip()
             if path.lower().endswith('.csv'):
                 try:
-                    self.df = pd.read_csv(path)
+                    self.df = pd.read_csv(path).copy()
                     self.file_path = path
 
                     file_name = os.path.basename(path)
