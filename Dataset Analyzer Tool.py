@@ -1,11 +1,12 @@
 ## imported modules
 import pandas as pd
 import os
+import numpy as np
 
 
 
 
-## Dataset load
+# Dataset load
 class DatasetManager:
 
     def __init__(self):
@@ -45,10 +46,143 @@ class DatasetManager:
 
 
 
-## App controler
+
+
+# Data Cleaner
+class DataCleaner:
+
+    def __init__(self, manager):
+        self.manager = manager
+        
+    ## Missing value report
+    def missing_value_report(self):
+        df = self.manager.df
+        print("------[Missing Value Report]-----")
+        print(df.isnull().sum())
+        print("--------------[In %]-------------")
+        print(round((df.isnull().sum() / len(df))*100, 1))
+
+    ## Fill missing values
+    def fill_missing_values(self):
+        df = self.manager.df
+
+        while True:
+            col_name = input("Enter column name ('q' to quit): ").strip()
+            if col_name in df.columns:
+
+                ### Data exploration of a specific column
+                print("\n--------------[Data Analysis of Column]------------")
+                print(f"Column: {col_name}")
+                # print(f"\nRows: {df.shape()[0]}")
+                print(f"\n[Data Type]... {df[col_name].dtype}")
+                print(f"\n[Missing values]... {df[col_name].isnull().sum()}")
+                print(f"\n[Missing Value in %]... {round((df[col_name].isnull().sum() / len(df[col_name]))*100, 1)}")
+                print(f"\n[First 5 rows]...\n{df[col_name].head()}")
+                print(f"\n[Last 5 rows]...\n{df[col_name].tail()}")
+                print("---------------------------------------------------\n")
+
+                while True:
+                    print("\n==============================")
+                    print("1. Mean")
+                    print("2. Median")
+                    print("3. Mode")
+                    print("4. Custom Value")
+                    print("5. Forward filling")
+                    print("6. Backward Filling")
+                    print("7. Linear Filling (Interpolation)")
+                    print("8. Back")
+                    print("==============================")
+
+                    choice = input("Choose method: ").strip()
+                    missing_before = df[col_name].isnull().sum()
+
+                    if choice == '1':
+                        if pd.api.types.is_numeric_dtype(df[col_name]):
+                            df[col_name] = df[col_name].fillna(round(np.mean(df[col_name]),2))
+                            print(f"\n☑️ Filled {missing_before} missing values using Mean\n")
+                        else:
+                            print("❌ This method is only available for numeric columns.")
+
+                    elif choice == '2':
+                        if pd.api.types.is_numeric_dtype(df[col_name]):
+                            df[col_name] = df[col_name].fillna(np.median(df[col_name]))
+                            print(f"\n☑️ Filled {df[missing_before].isnull().sum()} missing values using Median\n")
+                        else:
+                            print("❌ This method is only available for numeric columns.")
+
+                    elif choice == '3':
+                        df[col_name] = df[col_name].fillna(df[col_name].mode()[0])
+                        print(f"\n☑️ Filled {missing_before} missing values using Mode\n")
+                        
+                    elif choice == '4':
+                        custom_value = input("Enter custom value: ").strip()
+                        df[col_name] = df[col_name].fillna(custom_value)
+                        print(f"\n☑️ Filled {missing_before} missing values using Custom Value\n")
+                    
+                    elif choice == '5':
+                        df[col_name] = df[col_name].ffill()
+                        print(f"\n☑️ Filled {missing_before} missing values using Forward filling\n")
+
+                    elif choice == '6':
+                        df[col_name] = df[col_name].bfill()
+                        print(f"\n☑️ Filled {missing_before} missing values using Backward Filling\n")
+
+                    elif choice == '7':
+                        if pd.api.types.is_numeric_dtype(df[col_name]):
+                            df[col_name] = df[col_name].interpolate(method='linear')
+                            print(f"\n☑️ Filled {missing_before} missing values using Linear Filling (interpolation)\n")
+                        else:
+                            print("❌ This method is only available for numeric columns.")
+
+                    elif choice == '8':
+                        return
+                    
+                    else:
+                        print("❌ Invalid choice. Try again.\n")
+                        
+            elif col_name.lower() == 'q':
+                return
+            
+            else:
+                print("\n❌ Column not found. Try again..")
+                print("Note-> column name should same as original column name case(upper/lower).\n")
+
+
+
+
+    def drop_missing_rows(self):
+        pass
+
+    def drop_missing_columns(self):
+        pass
+
+    def remove_duplicate_rows(self):
+        pass
+
+    def rename_column(self):
+        pass
+
+    def change_data_type(self):
+        pass
+
+    def save_cleaned_dataset(self):
+        pass
+
+
+
+
+
+
+
+
+
+# App controler
 class DatasetAnalyzerApp:
     def __init__(self):
         self.manager = DatasetManager()
+        self.cleaner = DataCleaner(self.manager)
+
+
 
     ## Main menu with choice handelling
     def menu_system(self):
@@ -80,14 +214,19 @@ class DatasetAnalyzerApp:
             else:
                 print("❌ Invalid choice. Try again.\n")
 
+
+
+
+
     ## Data Exploration Menu with choice handelling
     def data_exploration_menu(self):
 
+        ### checking of data loading
         if not self.manager.is_loaded():
             print("\n❌ Please load dataset first.")
             return
 
-
+        ### menu controler
         while True:
             print("\n==============================")
             print("   DATA EXPLORATION MENU ")
@@ -165,17 +304,65 @@ class DatasetAnalyzerApp:
         
 
 
+
+
     ## Data cleaning menu with choice handeling
     def data_cleaning_menu(self):
-        if not self.manager.is_loaded():
-            print("\n❌ Please load dataset first.")
-            return
-        
-        print("⚠️ Work in under dovelopement")
-        print("This option will coming soon!")
 
-    ## Data visualization menu with choice handeling
+        ### checking of data loading
+        if not self.manager.is_loaded():
+            print("\n❌ Please load dataset first.")
+            return
+        
+        ### menu controler
+        while True:
+            print("\n==============================")
+            print("DATA CLEANING MENU")
+            print("==============================")
+            print("1. Missing Value Report")
+            print("2. Fill Missing Values")
+            print("3. Drop Missing Rows")
+            print("4. Drop Missing Columns")
+            print("5. Remove Duplicate Rows")
+            print("6. Rename Column")
+            print("7. Change Data Type")
+            print("8. Save Cleaned Dataset")
+            print("9. Back")
+            print("==============================")
+
+            choice = input("Enter your choice: ").strip()
+
+            if choice == '1':
+                self.cleaner.missing_value_report()
+            elif choice == '2':
+                self.cleaner.fill_missing_values()
+            elif choice == '3':
+                self.cleaner.drop_missing_rows()
+            elif choice == '4':
+                self.cleaner.drop_missing_columns()
+            elif choice == '5':
+                self.cleaner.remove_duplicate_rows()
+            elif choice == '6':
+                self.cleaner.rename_column()
+            elif choice == '7':
+                self.cleaner.change_data_type()
+            elif choice == '8':
+                self.cleaner.save_cleaned_dataset()
+            elif choice == '9':
+                return
+            else:
+                print("❌ Invalid choice. Try again.\n")
+            
+            print("----------------------------------")
+
+
+
+
+
+    ## Data visualization menu
     def data_visualization_menu(self):
+
+        ### checking of data loading
         if not self.manager.is_loaded():
             print("\n❌ Please load dataset first.")
             return
@@ -183,6 +370,9 @@ class DatasetAnalyzerApp:
         print("⚠️ Work in under dovelopement")
         print("This option will coming soon!")
         
+
+
+
 
 
 
