@@ -15,6 +15,7 @@ class DatasetManager:
 
 
 
+    ## Load dataset
     def load_dataset(self):
         while True:
             path = input("Enter CSV file path (or `q` to quit): ").strip()
@@ -22,13 +23,11 @@ class DatasetManager:
                 try:
                     self.df = pd.read_csv(path).copy()
                     self.file_path = path
-
                     file_name = os.path.basename(path)
                     print(f"\n☑️ Dataset {file_name} loaded successfully")
                     print(f"Rows: {self.df.shape[0]}")
                     print(f"Columns: {self.df.shape[1]}")
                     return
-
                 except FileNotFoundError:
                     print("❌ File not found")
             elif path.lower() == 'q':
@@ -38,9 +37,108 @@ class DatasetManager:
 
 
 
-
+    ## check loading status of dataset
     def is_loaded(self):
         return self.df is not None
+
+
+
+
+
+
+
+
+# Data explorer
+class DataExplorer:
+    
+    def __init__(self, manager):
+        self.manager = manager
+        pass
+
+
+
+    ## shape of dataset
+    def dataset_shape(self):
+        df = self.manager.df
+        print("--------------[Shape]-------------")
+        print(f"\nRows: {df.shape[0]}")
+        print(f"Columns: {df.shape[1]}\n")
+    
+
+
+    ## names of colulmns
+    def column_names(self):
+        df = self.manager.df
+        print("-----------[Column Names]---------")
+        for col in df.columns:
+            print(col)
+
+
+
+    ## data types of data
+    def data_types(self):
+        df = self.manager.df
+        print("-----------[Data Types]----------")
+        print(df.dtypes)
+
+
+
+    ## dataset info
+    def dataset_info(self):
+        df = self.manager.df
+        print("-----------[Dataset Info]---------")
+        df.info()
+
+
+
+    ## view of first 5 rows
+    def initial_rows(self):
+        df = self.manager.df
+        print("---------[First 5 Rows]-----------")
+        print(df.head())
+
+
+
+    ## view of last five rows
+    def last_rows(self):
+        df = self.manager.df
+        print("---------[Last 5 Rows]-----------")
+        print(df.tail())
+
+
+
+    ## statical summary of data
+    def statistical_summary(self):
+        df = self.manager.df
+        print("--------[Statical Summary]-------")
+        print(df.describe())
+
+
+
+    ## missing values report for columns
+    def missing_value_report(self):
+        df = self.manager.df
+        print("------[Missing Value Report]-----")
+        print(df.isnull().sum())
+        print("--------------[In %]-------------")
+        print(round((df.isnull().sum() / len(df))*100, 1))
+
+
+
+    ## unique values of specific column
+    def unique_values(self):
+        df = self.manager.df
+        col_name = input("Enter column name: ").strip()
+        if col_name in df.columns:
+            print(f"----[Unique Values in {col_name.title()}]----")
+            for val in df[col_name].unique():
+                print(f"- {val}")
+
+        else:
+            print("\n❌ Column not found. Try again..")
+            print("Note-> column name should same as original column name case(upper/lower).\n")
+
+        
 
 
 
@@ -54,6 +152,8 @@ class DataCleaner:
     def __init__(self, manager):
         self.manager = manager
         
+
+
     ## Missing value report
     def missing_value_report(self):
         df = self.manager.df
@@ -61,6 +161,9 @@ class DataCleaner:
         print(df.isnull().sum())
         print("--------------[In %]-------------")
         print(round((df.isnull().sum() / len(df))*100, 1))
+
+
+
 
     ## Fill missing values
     def fill_missing_values(self):
@@ -145,7 +248,6 @@ class DataCleaner:
             
             else:
                 print("\n❌ Column not found. Try again..")
-                print("Note-> column name should same as original column name case(upper/lower).\n")
 
 
 
@@ -246,7 +348,6 @@ class DataCleaner:
 
 
 
-
     ## remove duplicate rows
     def remove_duplicate_rows(self):
         df = self.manager.df
@@ -269,8 +370,7 @@ class DataCleaner:
 
 
 
-
-
+    ## save manipulated dataset as file
     def save_cleaned_dataset(self):
         df = self.manager.df
         file_name = input("Enter file-name to saved as: ").strip()
@@ -289,13 +389,12 @@ class DataCleaner:
 
 
 
-
 # App controler
 class DatasetAnalyzerApp:
     def __init__(self):
         self.manager = DatasetManager()
+        self.explorer = DataExplorer(self.manager)
         self.cleaner = DataCleaner(self.manager)
-
 
 
     ## Main menu with choice handelling
@@ -318,16 +417,15 @@ class DatasetAnalyzerApp:
             elif choice == '1':
                 self.data_exploration_menu()
             elif choice == '2':
-                self.data_cleaning_menu()
+                self.data_cleaning_menu()                
             elif choice == '3':
                 self.data_visualization_menu()
             elif choice == '4':
                 print("\n\nSee you again!!")
                 print("______________________________")
-                break
+                return
             else:
                 print("❌ Invalid choice. Try again.\n")
-
 
 
 
@@ -360,63 +458,30 @@ class DatasetAnalyzerApp:
             choice = input("Enter your choice: ").strip()
 
             if choice == '1':
-                print("--------------[Shape]-------------")
-                print(f"\nRows: {self.manager.df.shape[0]}")
-                print(f"Columns: {self.manager.df.shape[1]}\n")
-            
+                self.explorer.dataset_shape()
             elif choice == '2':
-                print("-----------[Column Names]---------")
-                for col in self.manager.df.columns:
-                    print(col)
-
+                self.explorer.column_names()
             elif choice == '3':
-                print("-----------[Data Types]----------")
-                print(self.manager.df.dtypes)
-
+                self.explorer.data_types()
             elif choice == '4':
-                print("-----------[Dataset Info]---------")
-                self.manager.df.info()
-
+                self.explorer.dataset_info()            
             elif choice == '5': 
-                print("---------[First 5 Rows]-----------")
-                print(self.manager.df.head())
-            
+                self.explorer.initial_rows()                
             elif choice == '6':
-                print("---------[Last 5 Rows]-----------")
-                print(self.manager.df.tail())
-            
+                self.explorer.last_rows()            
             elif choice == '7':
-                print("--------[Statical Summary]-------")
-                print(self.manager.df.describe())
-
+                self.explorer.statistical_summary()
             elif choice == '8':
-                print("------[Missing Value Report]-----")
-                print(self.manager.df.isnull().sum())
-                print("--------------[In %]-------------")
-                print(round((self.manager.df.isnull().sum() / len(self.manager.df))*100, 1))
-
+                self.explorer.missing_value_report()                
             elif choice == '9':
-                col_name = input("Enter column name: ").strip()
-                if col_name in self.manager.df.columns:
-                    print(f"----[Unique Values in {col_name.title()}]----")
-                    for val in self.manager.df[col_name].unique():
-                        print(f"- {val}")
-
-                else:
-                    print("\n❌ Column not found. Try again..")
-                    print("Note-> column name should same as original column name case(upper/lower).\n")
-
-
+                self.explorer.unique_values()               
             elif choice == '10':
-                print(".....Back to Main Menu.....\n")
-                return
-            
+                return            
             else:
                 print("❌ Invalid choice. Try again.\n")
             
             print("----------------------------------")
         
-
 
 
 
@@ -466,7 +531,6 @@ class DatasetAnalyzerApp:
 
 
 
-
     ## Data visualization menu
     def data_visualization_menu(self):
 
@@ -475,9 +539,11 @@ class DatasetAnalyzerApp:
             print("\n❌ Please load dataset first.")
             return
         
+        ### future code for data visualization
         print("⚠️ Work in under dovelopement")
         print("This option will coming soon!")
         
+
 
 
 
