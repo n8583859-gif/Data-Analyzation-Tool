@@ -166,12 +166,12 @@ class DataCleaner:
         print("----------------------------------------------")
 
         while True:
-            choice = input("⚠️ Are you sure! you wanna proceed (y/n): ").strip()
-            if choice.lower() == 'y':
+            confirm = input("⚠️ Are you sure! you wanna proceed (y/n): ").strip()
+            if confirm.lower() == 'y':
                 df.dropna(inplace=True)
                 print(f"\n☑️ {removed_rows} rows removed/dropped successfully.\n")
                 return 
-            elif choice.lower() == 'n':
+            elif confirm.lower() == 'n':
                 return
             else:
                 print("❌ Invalid choice. Try again.\n")
@@ -185,7 +185,7 @@ class DataCleaner:
         missing_value_col = df.isnull().sum()
         null_columns = df.columns[df.isnull().any()].tolist()
 
-        print("\n---------[Missing Value Report]-------")
+        print("\n---------[Missing Value Count Report]-------")
         print(f"Columns with missing values: \n{missing_value_col}")
         print("---------------------------------------")
 
@@ -257,12 +257,12 @@ class DataCleaner:
         print("---------------------------------------------")
 
         while True:
-            choice = input("⚠️ Are you sure! you wanna proceed (y/n): ").strip()
-            if choice.lower() == 'y':
+            confirm = input("⚠️ Are you sure! you wanna proceed (y/n): ").strip()
+            if confirm.lower() == 'y':
                 df.drop_duplicates(inplace=True)
                 print(f"\n☑️ {duplicate_rows} duplicate rows removed/dropped successfully.\n")
                 return 
-            elif choice.lower() == 'n':
+            elif confirm.lower() == 'n':
                 return
             else:
                 print("❌ Invalid choice. Try again.\n")
@@ -279,7 +279,7 @@ class DataCleaner:
             file_name += '.csv'
         
         df.to_csv(file_name, index=False)
-        print(f"\n☑️  Dataset saved as {file_name}.csv\n")
+        print(f"\n☑️  Dataset saved as {file_name}\n")
 
 
 
