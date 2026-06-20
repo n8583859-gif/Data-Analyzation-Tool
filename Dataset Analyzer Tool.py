@@ -149,7 +149,7 @@ class DataCleaner:
 
 
 
-
+    ## drop missing rows
     def drop_missing_rows(self):
         df = self.manager.df
         before_rows = df.shape[0]
@@ -169,7 +169,98 @@ class DataCleaner:
             choice = input("⚠️ Are you sure! you wanna proceed (y/n): ").strip()
             if choice.lower() == 'y':
                 df.dropna(inplace=True)
-                print(f"/n☑️ {removed_rows} rows removed/dropped successfully.\n")
+                print(f"\n☑️ {removed_rows} rows removed/dropped successfully.\n")
+                return 
+            elif choice.lower() == 'n':
+                return
+            else:
+                print("❌ Invalid choice. Try again.\n")
+
+
+
+
+    ## drop missing columns
+    def drop_missing_columns(self):
+        df = self.manager.df
+        missing_value_col = df.isnull().sum()
+        null_columns = df.columns[df.isnull().any()].tolist()
+
+        print("\n---------[Missing Value Report]-------")
+        print(f"Columns with missing values: \n{missing_value_col}")
+        print("---------------------------------------")
+
+        while True:
+            print("\n==============================")
+            print("1. Choose Specific column")
+            print("2. Drop all columns with missing values")
+            print("3. Back")
+            print("==============================")
+
+            choice = input("Enter your choice: ").strip()
+            
+            ### remove specific column
+            if choice == '1':
+                while True:
+                    col_name = input("Enter column name ('q' to quit): ").strip()
+                    if col_name in df.columns:
+                        #### give caution of removing non null column.
+                        if col_name not in null_columns:
+                            print(f"⚠️  Column [{col_name}] has 0 missing values.")
+
+                        while True:
+                            confirm = input("⚠️  Are you sure! you wanna proceed (y/n): ").strip()
+                            if confirm.lower() == 'y':
+                                df.drop(columns=col_name, inplace=True)
+                                print(f"\n☑️ Column [{col_name}] removed successfully.\n")
+                                return
+                            elif confirm.lower() == 'n':
+                                return
+                            else:
+                                print("❌ Invalid choice. Try again.\n")
+
+                    elif col_name.lower() == 'q':
+                        return
+                    else:
+                        print("❌ Invalid choice. Try again.\n") 
+                        
+            ### remove all columns with NA values
+            elif choice == '2':
+                while True:
+                    confirm = input("⚠️ Are you sure! you wanna proceed (y/n): ").strip()
+                    if confirm.lower() == 'y':
+                        df.dropna(axis=1, inplace=True)
+                        print(f"\n☑️ Columns {null_columns} removed successfully.\n")
+                        return 
+                    elif confirm.lower() == 'n':
+                        return
+                    else:
+                        print("❌ Invalid choice. Try again.\n")
+
+
+            elif choice == '3':
+                return
+            
+            else:
+                print("❌ Invalid choice. Try again.\n")
+
+
+
+
+
+    ## remove duplicate rows
+    def remove_duplicate_rows(self):
+        df = self.manager.df
+        duplicate_rows = df.duplicated().sum()
+
+        print("\n--------[Quick View of Duplicate Rows]-------")
+        print(f"Duplicate Found: {duplicate_rows}")
+        print("---------------------------------------------")
+
+        while True:
+            choice = input("⚠️ Are you sure! you wanna proceed (y/n): ").strip()
+            if choice.lower() == 'y':
+                df.drop_duplicates(inplace=True)
+                print(f"\n☑️ {duplicate_rows} duplicate rows removed/dropped successfully.\n")
                 return 
             elif choice.lower() == 'n':
                 return
@@ -180,11 +271,6 @@ class DataCleaner:
 
 
 
-    def drop_missing_columns(self):
-        pass
-
-    def remove_duplicate_rows(self):
-        pass
 
     def rename_column(self):
         pass
