@@ -272,7 +272,14 @@ class DataCleaner:
 
 
     def save_cleaned_dataset(self):
-        pass
+        df = self.manager.df
+        file_name = input("Enter file-name to saved as: ").strip()
+
+        if not file_name.endswith('.csv'):
+            file_name += '.csv'
+        
+        df.to_csv(file_name, index=False)
+        print(f"\n☑️  Dataset saved as {file_name}.csv\n")
 
 
 
