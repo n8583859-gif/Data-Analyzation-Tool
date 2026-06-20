@@ -271,15 +271,9 @@ class DataCleaner:
 
 
 
-
-    def rename_column(self):
-        pass
-
-    def change_data_type(self):
-        pass
-
     def save_cleaned_dataset(self):
         pass
+
 
 
 
@@ -437,10 +431,8 @@ class DatasetAnalyzerApp:
             print("3. Drop Missing Rows")
             print("4. Drop Missing Columns")
             print("5. Remove Duplicate Rows")
-            print("6. Rename Column")
-            print("7. Change Data Type")
-            print("8. Save Cleaned Dataset")
-            print("9. Back")
+            print("6. Save Cleaned Dataset")
+            print("7. Back")
             print("==============================")
 
             choice = input("Enter your choice: ").strip()
@@ -456,12 +448,8 @@ class DatasetAnalyzerApp:
             elif choice == '5':
                 self.cleaner.remove_duplicate_rows()
             elif choice == '6':
-                self.cleaner.rename_column()
-            elif choice == '7':
-                self.cleaner.change_data_type()
-            elif choice == '8':
                 self.cleaner.save_cleaned_dataset()
-            elif choice == '9':
+            elif choice == '7':
                 return
             else:
                 print("❌ Invalid choice. Try again.\n")
