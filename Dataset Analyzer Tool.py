@@ -209,7 +209,7 @@ class DataCleaner:
                     elif choice == '2':
                         if pd.api.types.is_numeric_dtype(df[col_name]):
                             df[col_name] = df[col_name].fillna(np.median(df[col_name]))
-                            print(f"\n☑️ Filled {missing_before.isnull().sum()} missing values using Median\n")
+                            print(f"\n☑️ Filled {missing_before} missing values using Median\n")
                         else:
                             print("❌ This method is only available for numeric columns.")
 
