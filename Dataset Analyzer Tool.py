@@ -202,38 +202,45 @@ class DataCleaner:
                     if choice == '1':
                         if pd.api.types.is_numeric_dtype(df[col_name]):
                             df[col_name] = df[col_name].fillna(round(np.mean(df[col_name]),2))
-                            print(f"\n☑️ Filled {missing_before} missing values using Mean\n")
+                            print(f"\n☑️ Filled {missing_before} missing values with Mean value: {round(np.mean(df[col_name]),2)}\n")
+                            return
                         else:
                             print("❌ This method is only available for numeric columns.")
 
                     elif choice == '2':
                         if pd.api.types.is_numeric_dtype(df[col_name]):
                             df[col_name] = df[col_name].fillna(np.median(df[col_name]))
-                            print(f"\n☑️ Filled {missing_before} missing values using Median\n")
+                            print(f"\n☑️ Filled {missing_before} missing values with Median value: {np.median(df[col_name])}\n")
+                            return
                         else:
                             print("❌ This method is only available for numeric columns.")
 
                     elif choice == '3':
                         df[col_name] = df[col_name].fillna(df[col_name].mode()[0])
-                        print(f"\n☑️ Filled {missing_before} missing values using Mode\n")
+                        print(f"\n☑️ Filled {missing_before} missing values with Mode value: {df[col_name].mode()[0]}\n")
+                        return
                         
                     elif choice == '4':
                         custom_value = input("Enter custom value: ").strip()
                         df[col_name] = df[col_name].fillna(custom_value)
-                        print(f"\n☑️ Filled {missing_before} missing values using Custom Value\n")
+                        print(f"\n☑️ Filled {missing_before} missing values with Custom Value: {custom_value}\n")
+                        return
                     
                     elif choice == '5':
                         df[col_name] = df[col_name].ffill()
                         print(f"\n☑️ Filled {missing_before} missing values using Forward filling\n")
+                        return
 
                     elif choice == '6':
                         df[col_name] = df[col_name].bfill()
                         print(f"\n☑️ Filled {missing_before} missing values using Backward Filling\n")
+                        return
 
                     elif choice == '7':
                         if pd.api.types.is_numeric_dtype(df[col_name]):
                             df[col_name] = df[col_name].interpolate(method='linear')
                             print(f"\n☑️ Filled {missing_before} missing values using Linear Filling (interpolation)\n")
+                            return
                         else:
                             print("❌ This method is only available for numeric columns.")
 
