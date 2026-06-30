@@ -30,6 +30,14 @@ class DatasetManager:
                     return
                 except FileNotFoundError:
                     print("❌ File not found")
+                except UnicodeEncodeError:
+                    self.df = pd.read_csv(path, encoding='latin1').copy()
+                    self.file_path = path
+                    file_name = os.path.basename(path)
+                    print(f"\n☑️ Dataset {file_name} loaded successfully")
+                    print(f"Rows: {self.df.shape[0]}")
+                    print(f"Columns: {self.df.shape[1]}")
+                    return
             elif path.lower() == 'q':
                 return
             else:
